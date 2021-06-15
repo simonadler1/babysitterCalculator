@@ -11,6 +11,8 @@
   "license": "ISC",
   "dependencies": {
     "axios": "^0.21.1",
+    "dotenv": "^8.2.0",
+    "mongoose": "^5.11.12",
     "twilio": "^3.55.0"
   }
 }
