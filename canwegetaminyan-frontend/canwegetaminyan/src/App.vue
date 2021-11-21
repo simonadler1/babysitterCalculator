@@ -48,7 +48,7 @@
 </template>
 
 <script>
-import axios from "axios";
+import ApiService from "../src/api/main";
 export default {
   name: "App",
   computed: {
@@ -59,6 +59,7 @@ export default {
       return 0;
     }
   },
+  created() {},
   data() {
     return {
       form: {
@@ -73,11 +74,10 @@ export default {
   },
   methods: {
     createMinyan() {
-      axios
-        .post("http://localhost:5000/api/v1/minyan", {
-          ...this.form,
-          numberOfAttending: this.numberOfAttending
-        })
+      ApiService.createMinyan({
+        ...this.form,
+        numberOfAttending: this.numberOfAttending
+      })
         .then(response => {
           this.handleMinyanCreation(response);
         })
