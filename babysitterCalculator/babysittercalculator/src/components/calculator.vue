@@ -1,75 +1,133 @@
 <template>
-  <div>
-    <v-row
-      ><v-col
-        ><label for="hours">Number of hours (0-24):</label>
+  <v-container class="calculator-container pa-0">
+    <v-card class="mx-2">
+      <v-card-title class="text-h5 text-sm-h4 text-center d-block py-4 primary white--text">
+        Babysitter Calculator
+      </v-card-title>
 
-        <input
-          v-model="hours"
-          type="number"
-          id="hours"
-          name="hours"
-          min="0"
-          max="24"
-          value="0" /></v-col
-      ><v-col
-        ><label for="minutes">Number of minutes (0-59):</label>
+      <v-card-text class="pt-6">
+        <!-- Time Input Section -->
+        <div class="time-section mb-6">
+          <div class="text-subtitle-1 mb-2">Enter Time</div>
+          <v-row dense>
+            <v-col cols="6">
+              <v-text-field
+                v-model="hours"
+                label="Hours"
+                type="number"
+                min="0"
+                max="24"
+                outlined
+                dense
+                hide-details="auto"
+                class="number-input"
+                :rules="[(v) => (v >= 0 && v <= 24) || 'Invalid']"
+              ></v-text-field>
+            </v-col>
 
-        <input
-          v-model="minutes"
-          type="number"
-          id="minutes"
-          name="minutes"
-          min="0"
-          max="59"
-          value="0" /></v-col
-    ></v-row>
-    <v-row
-      ><v-col>
-        <label for="salary">Pay Per Hour:</label>
+            <v-col cols="6">
+              <v-text-field
+                v-model="minutes"
+                label="Minutes"
+                type="number"
+                min="0"
+                max="59"
+                outlined
+                dense
+                hide-details="auto"
+                class="number-input"
+                :rules="[(v) => (v >= 0 && v <= 59) || 'Invalid']"
+              ></v-text-field>
+            </v-col>
+          </v-row>
+        </div>
 
-        <input
-          v-model="salary"
-          type="number"
-          id="salary"
-          name="salary"
-          min="0"
-          value="0.00" /></v-col
-    ></v-row>
-    Total Hours: {{ totalHours }} Total Pay: {{ totalPay }}
-  </div>
+        <!-- Pay Rate Section -->
+        <div class="pay-section mb-6">
+          <div class="text-subtitle-1 mb-2">Enter Pay Rate</div>
+          <v-text-field
+            v-model="salary"
+            label="Hourly Rate"
+            type="number"
+            min="0"
+            step="0.01"
+            outlined
+            dense
+            hide-details="auto"
+            prefix="$"
+            class="number-input"
+          ></v-text-field>
+        </div>
+
+        <!-- Results Section -->
+        <v-divider></v-divider>
+
+        <v-card-text class="results-section text-center py-4">
+          <div class="d-flex justify-space-between align-center flex-wrap">
+            <div class="result-item flex-grow-1 py-2">
+              <div class="text-subtitle-2 grey--text">Total Hours</div>
+              <div class="text-h5">{{ formattedTotalHours }}</div>
+            </div>
+
+            <v-divider vertical class="mx-4 hidden-xs-only"></v-divider>
+            <v-divider class="my-2 hidden-sm-and-up"></v-divider>
+
+            <div class="result-item flex-grow-1 py-2">
+              <div class="text-subtitle-2 grey--text">Total Pay</div>
+              <div class="text-h5 primary--text">{{ formattedTotalPay }}</div>
+            </div>
+          </div>
+        </v-card-text>
+      </v-card-text>
+    </v-card>
+  </v-container>
 </template>
 
 <script>
 export default {
   computed: {
     totalHours() {
-      return parseInt(this.hours) + parseInt(this.minutes) / 60;
+      return parseFloat(this.hours || 0) + parseFloat(this.minutes || 0) / 60;
     },
     totalPay() {
-      return this.totalHours * this.salary;
+      return this.totalHours * parseFloat(this.salary || 0);
+    },
+    formattedTotalHours() {
+      return this.totalHours.toFixed(2);
+    },
+    formattedTotalPay() {
+      return `$${this.totalPay.toFixed(2)}`;
     },
   },
   data() {
     return {
-      hours: 0,
-      minutes: 0,
-      salary: 0,
+      hours: "",
+      minutes: "",
+      salary: "",
     };
   },
 };
 </script>
 
-<style>
-label {
-  display: block;
-  font: 2rem "Fira Sans", sans-serif;
+<style scoped>
+.calculator-container {
+  max-width: 600px;
+  margin: auto;
 }
-input[type="number"] {
-  border: 2px solid black;
+
+/* Prevent number input spinners */
+.number-input :deep(input[type="number"]) {
+  -moz-appearance: textfield;
 }
-input,
-label {
-  margin: 0.8rem 0;
+
+.number-input :deep(input[type="number"]::-webkit-outer-spin-button),
+.number-input :deep(input[type="number"]::-webkit-inner-spin-button) {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* Ensure tap targets are large enough */
+.number-input :deep(.v-input__slot) {
+  min-height: 48px;
 }
 </style>
