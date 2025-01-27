@@ -16,12 +16,11 @@
                 label="Hours"
                 type="number"
                 min="0"
-                max="24"
                 outlined
                 dense
                 hide-details="auto"
                 class="number-input"
-                :rules="[(v) => (v >= 0 && v <= 24) || 'Invalid']"
+                :rules="[(v) => v >= 0 || 'Hours must be positive']"
               ></v-text-field>
             </v-col>
 
